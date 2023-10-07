@@ -12,13 +12,17 @@ email : septiawanajipradana@gmail.com
 website : dewakoding.com
 
  **/
-class JavascriptInterface() {
+class JavascriptInterface(
+    template: String
+) {
     companion object {
         const val TAG_HANDLER = "Android"
     }
 
+    private val mtemplate = template
+
     @JavascriptInterface
     fun getTemplate(): String {
-        return ""
+        return mtemplate
     }
 }

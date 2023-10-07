@@ -34,8 +34,8 @@ class SurveyJSView @JvmOverloads constructor(
         webView = WebView(context)
     }
 
-    fun setTemplate() {
-        jsi = JavascriptInterface()
+    fun setTemplate(strTemplate: String) {
+        jsi = JavascriptInterface(strTemplate)
         render(jsi)
     }
 
