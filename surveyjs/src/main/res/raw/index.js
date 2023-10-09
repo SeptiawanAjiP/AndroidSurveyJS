@@ -7,11 +7,8 @@ const survey = new Survey.Model(surveyJson);
 
 function alertResults (sender) {
     const results = JSON.stringify(sender.data);
-    alert(results);
-    // saveSurveyResults(
-    //     "https://your-web-service.com/" + SURVEY_ID,
-    //     sender.data
-    // )
+
+    Android.getResponse(results)
 }
 
 survey.onComplete.add(alertResults);
