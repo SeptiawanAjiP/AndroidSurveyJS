@@ -3,9 +3,11 @@ package com.dewakoding.androidsurveyjsapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.core.view.get
 import com.dewakoding.androidsurveyjsapp.databinding.ActivityMainBinding
 import com.dewakoding.surveyjs.SurveyResponseCallback
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.io.InputStreamReader
@@ -22,12 +24,14 @@ class MainActivity : AppCompatActivity(), SurveyResponseCallback  {
 
         binding.surveyjsView.setTemplate(template)
         binding.surveyjsView.setSurveyResponseCallback(this)
-
     }
 
     override fun onSurveyResponseReceived(response: String) {
-        Log.d("RESPONSE DATA", response)
+        Snackbar.make(
+            findViewById<View>(android.R.id.content).rootView,
+            response,
+            Snackbar.LENGTH_LONG
+        ).show()
+
     }
-
-
 }
