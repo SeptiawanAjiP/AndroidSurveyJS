@@ -44,7 +44,9 @@ replace Tag with the latest version.
 ```
 ### Activity
 ```bash
-override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity : AppCompatActivity(), SurveyResponseCallback  {
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
@@ -64,4 +66,5 @@ override fun onCreate(savedInstanceState: Bundle?) {
         ).show()
 
     }
+}
 ```
