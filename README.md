@@ -1,7 +1,7 @@
 # AndroidSurveyJS
 ![image](https://raw.githubusercontent.com/SeptiawanAjiP/AndroidSurveyJS/master/demo.jpeg)
 
-AndroidSurveyJS is a versatile library for Android that enables you to display generic forms. and run SurveyJS surveys offline on Android devices. This library provides a convenient way to integrate SurveyJS with your Android applications, making it easy to create and manage surveys, as well as customize forms and questionnaires to meet your specific needs.
+AndroidSurveyJS is a versatile library for Android that enables you to display generic forms and run SurveyJS surveys offline on Android devices. This library provides a convenient way to integrate SurveyJS with your Android applications, making it easy to create and manage surveys, as well as customize forms and questionnaires to meet your specific needs.
 
 **[SurveyJS](https://surveyjs.io/)** is a powerful and versatile JavaScript library for building online surveys and forms. With AndroidSurveyJS, you can seamlessly bring SurveyJS functionality to Android applications, even when offline.
 
