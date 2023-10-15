@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), SurveyResponseCallback  {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val template = assets.open("template.json")
+        val template = assets.open("template-image.json")
             .bufferedReader()
             .use { it.readText() }
 
