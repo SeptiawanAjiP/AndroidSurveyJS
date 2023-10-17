@@ -1,14 +1,13 @@
 package com.dewakoding.surveyjs
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.net.http.SslError
 import android.os.Build
-import android.util.AttributeSet
-import android.util.Log
+import android.os.Bundle
 import android.webkit.PermissionRequest
 import android.webkit.SslErrorHandler
 import android.webkit.ValueCallback
@@ -16,78 +15,91 @@ import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
-import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import com.dewakoding.surveyjs.databinding.ActivitySurveyJsBinding
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
-class SurveyJSView @JvmOverloads constructor(
-    context: Context,
-    attrs: AttributeSet? = null,
-    defStyle: Int = 0
-) : LinearLayout(context, attrs, defStyle) {
-    private val webView: WebView
+
+/**
+
+Created by
+name : Septiawan Aji Pradana
+email : septiawanajipradana@gmail.com
+website : dewakoding.com
+
+ **/
+open class SurveyJSActivity: AppCompatActivity() {
+
+    private val binding by lazy { ActivitySurveyJsBinding.inflate(layoutInflater) }
     internal var jsi: JavascriptInterface? = null
-
-    private var surveyResponseCallback: SurveyResponseCallback? = null
     private var savedResponse: String? = null
-
-    val REQUEST_SELECT_FILE = 100
+    private val REQUEST_SELECT_FILE = 100
     private val FILECHOOSER_RESULTCODE = 1
-    private var uploadMessage: ValueCallback<*>? = null
     var uploadMessageArray: ValueCallback<Array<Uri>>? = null
+    var link: String? = null
+    private var uploadMessage: ValueCallback<*>? = null
 
-    init {
-        orientation = VERTICAL
-        webView = WebView(context)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_AUDIO,
+                ),
+                1
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                ),
+                1
+            )
+        }
+
     }
 
-    fun setSurveyResponseCallback(callback: SurveyResponseCallback) {
-        this.surveyResponseCallback = callback
-    }
-
-    fun setTemplate(strTemplate: String) {
+    open fun setTemplate(strTemplate: String, surveyResponseCallback: SurveyResponseCallback) {
         jsi = JavascriptInterface(strTemplate, object : SurveyResponseCallback {
             override fun onSurveyResponseReceived(response: String) {
                 savedResponse = response
                 surveyResponseCallback?.onSurveyResponseReceived(response)
             }
         })
-        render(jsi)
+        loadContent(jsi)
     }
 
-    fun getUploadMessage(): ValueCallback<Array<Uri>>? {
-        return uploadMessage as? ValueCallback<Array<Uri>>
-    }
-
-    fun setUploadMessage(callback: ValueCallback<Array<Uri>>) {
-        uploadMessage = callback
-    }
-
-    private fun render(jsi: JavascriptInterface?) {
-        val webSettings: WebSettings = webView.settings
-        webSettings.javaScriptEnabled = true
-
-        webView.settings.allowFileAccess = true
-        webView.settings.setDomStorageEnabled(true)
-        webView.settings.setAllowContentAccess(true)
-        webView.settings.setAllowFileAccess(true)
-        webView.clearCache(true)
-
-        webView.webViewClient = object : WebViewClient() {
+    @SuppressLint("JavascriptInterface", "SetJavaScriptEnabled")
+    private fun loadContent(jsi: JavascriptInterface?) {
+        binding.webViewComponent.settings.javaScriptEnabled = true
+        binding.webViewComponent.settings.allowFileAccess = true
+        binding.webViewComponent.settings.setDomStorageEnabled(true);
+        binding.webViewComponent.settings.setAllowContentAccess(true);
+        binding.webViewComponent.settings.setAllowFileAccess(true);
+        binding.webViewComponent.clearCache(true)
+        binding.webViewComponent.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 return false
             }
         }
+        binding.webViewComponent.addJavascriptInterface(jsi!!, JavascriptInterface.TAG_HANDLER)
+        binding.webViewComponent.webChromeClient = MyWebChromeClient()
 
-        webView.addJavascriptInterface(jsi!!, JavascriptInterface.TAG_HANDLER)
-        webView.webChromeClient = MyWebChromeClient()
-        webView.webViewClient = object : WebViewClient() {
+        binding.webViewComponent.webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 view.loadUrl(url)
                 return true
@@ -110,7 +122,7 @@ class SurveyJSView @JvmOverloads constructor(
                 failingUrl: String?
             ) {
                 super.onReceivedError(view, errorCode, description, failingUrl)
-                Toast.makeText(context, description, Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, description, Toast.LENGTH_SHORT)
             }
 
             override fun onLoadResource(view: WebView, url: String) {
@@ -118,6 +130,7 @@ class SurveyJSView @JvmOverloads constructor(
 
             override fun onPageFinished(view: WebView, url: String) {
                 super.onPageFinished(view, url)
+
             }
 
             override fun onReceivedHttpError(
@@ -127,7 +140,7 @@ class SurveyJSView @JvmOverloads constructor(
             ) {
                 super.onReceivedHttpError(view, request, errorResponse)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Toast.makeText(context, errorResponse.toString(), Toast.LENGTH_SHORT)
+                    Toast.makeText(applicationContext, errorResponse.toString(), Toast.LENGTH_SHORT)
                 }
             }
 
@@ -137,11 +150,11 @@ class SurveyJSView @JvmOverloads constructor(
                 error: WebResourceError
             ) {
                 super.onReceivedError(view, request, error)
-                Toast.makeText(context, "onReceivedError", Toast.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "onReceivedError", Toast.LENGTH_SHORT)
                 WebViewClient.ERROR_AUTHENTICATION
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     Toast.makeText(
-                        context,
+                        applicationContext,
                         "error code: ${error.errorCode} " + request.url.toString() + " , " + error.description,
                         Toast.LENGTH_SHORT
                     ).show()
@@ -154,8 +167,9 @@ class SurveyJSView @JvmOverloads constructor(
                 error: SslError
             ) {
                 super.onReceivedSslError(view, handler, error)
-                Toast.makeText(context, "onReceivedSslError", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "onReceivedSslError", Toast.LENGTH_SHORT).show()
             }
+
         }
 
         val rawResourceId = R.raw.surveyjs
@@ -163,8 +177,7 @@ class SurveyJSView @JvmOverloads constructor(
         val htmlData = convertStreamToString(inputStream)
         val baseUrl = "file:///android_res/raw/"
         val dataUri = Uri.parse(baseUrl + rawResourceId)
-        webView.loadDataWithBaseURL(baseUrl, htmlData, "text/html", "UTF-8", null)
-        addView(webView)
+        binding.webViewComponent.loadDataWithBaseURL(baseUrl, htmlData, "text/html", "UTF-8", null)
     }
 
     private fun convertStreamToString(inputStream: InputStream): String {
@@ -187,21 +200,20 @@ class SurveyJSView @JvmOverloads constructor(
         return stringBuilder.toString()
     }
 
+
+
     internal inner class MyWebChromeClient : WebChromeClient() {
         override fun onPermissionRequest(request: PermissionRequest?) {
-            Log.d("Pusat Bantuan Activity", "onPermissionRequest")
-        }
 
-        // For 3.0+ Devices (Start)
+        }
         protected fun openFileChooser(uploadMsg: ValueCallback<*>, acceptType: String) {
             uploadMessage = uploadMsg
             val i = Intent(Intent.ACTION_GET_CONTENT)
             i.addCategory(Intent.CATEGORY_OPENABLE)
             i.type = "image/*"
-            (context as Activity).startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
+            startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
         }
 
-        // For Lollipop 5.0+ Devices
         @TargetApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onShowFileChooser(
             mWebView: WebView,
@@ -209,25 +221,25 @@ class SurveyJSView @JvmOverloads constructor(
             fileChooserParams: FileChooserParams
         ): Boolean {
             if (uploadMessageArray != null) {
-                uploadMessageArray?.onReceiveValue(null)
+                uploadMessageArray!!.onReceiveValue(null)
                 uploadMessageArray = null
             }
 
-            uploadMessageArray= filePathCallback
+            uploadMessageArray = filePathCallback
 
             val intent = fileChooserParams.createIntent()
             try {
-                (context as Activity).startActivityForResult(intent, REQUEST_SELECT_FILE)
+                startActivityForResult(intent, REQUEST_SELECT_FILE)
             } catch (e: Exception) {
                 uploadMessageArray = null
-                Toast.makeText(context, "Cannot Open File Chooser", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Cannot Open File Chooser", Toast.LENGTH_SHORT)
+                    .show()
                 return false
             }
 
             return true
         }
 
-        // For Android 4.1 only
         protected fun openFileChooser(
             uploadMsg: ValueCallback<Uri>,
             acceptType: String,
@@ -237,7 +249,7 @@ class SurveyJSView @JvmOverloads constructor(
             val intent = Intent(Intent.ACTION_GET_CONTENT)
             intent.addCategory(Intent.CATEGORY_OPENABLE)
             intent.type = "image/*"
-            (context as Activity).startActivityForResult(
+            startActivityForResult(
                 Intent.createChooser(intent, "File Chooser"),
                 FILECHOOSER_RESULTCODE
             )
@@ -248,7 +260,31 @@ class SurveyJSView @JvmOverloads constructor(
             val i = Intent(Intent.ACTION_GET_CONTENT)
             i.addCategory(Intent.CATEGORY_OPENABLE)
             i.type = "image/*"
-            (context as Activity).startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
+            startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (requestCode === REQUEST_SELECT_FILE) {
+                if (uploadMessageArray == null)
+                    return
+                print("result code = " + resultCode)
+                var results: Array<Uri>? =
+                    WebChromeClient.FileChooserParams.parseResult(resultCode, data)
+                uploadMessageArray?.onReceiveValue(results)
+                uploadMessageArray = null
+            }
+        } else if (requestCode === FILECHOOSER_RESULTCODE) {
+            if (null == uploadMessage)
+                return
+            val result = if (intent == null || resultCode !== RESULT_OK) null else intent.data
+            uploadMessage?.onReceiveValue(null)
+            uploadMessage = null
+        } else {
+            Toast.makeText(applicationContext, "Failed to Upload Image", Toast.LENGTH_LONG).show()
         }
     }
 }
