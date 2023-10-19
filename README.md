@@ -25,37 +25,16 @@ dependencies {
 ```
 replace Tag with the latest version.
 ## Usage
-### XML Layout
 ```bash
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <com.dewakoding.surveyjs.SurveyJSView
-        android:id="@+id/surveyjs_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-```
-### Activity
-```bash
-class MainActivity : AppCompatActivity(), SurveyResponseCallback  {
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
+class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
 
-        val template = assets.open("template.json")
+        val template = assets.open("template-image.json")
             .bufferedReader()
             .use { it.readText() }
+        setTemplate(template, this)
 
-        binding.surveyjsView.setTemplate(template)
-        binding.surveyjsView.setSurveyResponseCallback(this)
     }
 
     override fun onSurveyResponseReceived(response: String) {
@@ -64,7 +43,6 @@ class MainActivity : AppCompatActivity(), SurveyResponseCallback  {
             response,
             Snackbar.LENGTH_LONG
         ).show()
-
     }
 }
 ```
