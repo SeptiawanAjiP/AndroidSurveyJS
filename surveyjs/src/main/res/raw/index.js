@@ -1,7 +1,6 @@
 // const SURVEY_ID = 1;
 
 const surveyJson = JSON.parse(Android.getForm());
-const data = JSON.parse(Android.getData())
 const mode = Android.getMode()
 
 const survey = new Survey.Model(surveyJson);
@@ -13,8 +12,11 @@ function alertResults (sender) {
 }
 
 function setData() {
+
+
+    const data = Android.getData()
     if (data) {
-        survey.data = data
+        survey.data = JSON.parse(data)
     }
 
     if (mode) {

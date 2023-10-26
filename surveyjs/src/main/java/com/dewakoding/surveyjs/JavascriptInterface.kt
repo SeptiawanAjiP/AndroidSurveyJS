@@ -13,7 +13,7 @@ website : dewakoding.com
  **/
 class JavascriptInterface(
     form: String,
-    data: String,
+    data: String?,
     mode: String,
     surveyResponseCallback: SurveyResponseCallback
 ) {
@@ -32,7 +32,7 @@ class JavascriptInterface(
     }
 
     @JavascriptInterface
-    fun getData(): String {
+    fun getData(): String? {
         return mData
     }
 

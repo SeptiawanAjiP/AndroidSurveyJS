@@ -9,10 +9,13 @@ email : septiawanajipradana@gmail.com
 website : dewakoding.com
 
  **/
-class Const {
+class SurveyJSConst {
     companion object {
         val PERMISSION_CODE = 58
         val FILECHOOSER_RESULTCODE = 57
         val REQUEST_SELECT_FILE = 100
+
+        val MODE_EDIT = "edit"
+        val MODE_DISPLAY = "display"
     }
 }
