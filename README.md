@@ -30,10 +30,17 @@ class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val template = assets.open("template-image.json")
+        val template = assets.open("template.json")
             .bufferedReader()
             .use { it.readText() }
-        setTemplate(template, this)
+
+      // If data is empty or being opened for the first time, you can set it as null
+        val data = assets.open("data.json")
+            .bufferedReader()
+            .use { it.readText() }
+
+        // Choose the mode: SurveyJSConst.MODE_DISPLAY for display or read-only, SurveyJSConst.MODE_EDIT to enable editing
+        setForm(template, data, SurveyJSConst.MODE_DISPLAY, this)
 
     }
 
