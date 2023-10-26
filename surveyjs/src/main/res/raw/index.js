@@ -1,14 +1,26 @@
 // const SURVEY_ID = 1;
 
-console.log(JSON.parse(Android.getTemplate()))
-const surveyJson = JSON.parse(Android.getTemplate());
+const surveyJson = JSON.parse(Android.getForm());
+const data = JSON.parse(Android.getData())
+const mode = Android.getMode()
 
 const survey = new Survey.Model(surveyJson);
+setData()
 
 function alertResults (sender) {
     const results = JSON.stringify(sender.data);
-
     Android.getResponse(results)
+}
+
+function setData() {
+    if (data) {
+        survey.data = data
+    }
+
+    if (mode) {
+        survey.mode = mode
+    }
+
 }
 
 survey.onComplete.add(alertResults);
@@ -18,23 +30,3 @@ document.addEventListener("DOMContentLoaded", function() {
         model: survey
     });
 });
-
-// function saveSurveyResults(url, json) {
-//     fetch(url, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json;charset=UTF-8'
-//         },
-//         body: JSON.stringify(json)
-//     })
-//     .then(response => {
-//         if (response.ok) {
-//             // Handle success
-//         } else {
-//             // Handle error
-//         }
-//     })
-//     .catch(error => {
-//         // Handle error
-//     });
-// }

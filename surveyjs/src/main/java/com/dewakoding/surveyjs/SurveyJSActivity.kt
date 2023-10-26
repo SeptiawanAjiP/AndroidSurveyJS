@@ -73,8 +73,8 @@ open class SurveyJSActivity: AppCompatActivity() {
 
     }
 
-    open fun setTemplate(strTemplate: String, surveyResponseCallback: SurveyResponseCallback) {
-        jsi = JavascriptInterface(strTemplate, object : SurveyResponseCallback {
+    open fun setForm(strForm: String, data: String, mode: String, surveyResponseCallback: SurveyResponseCallback) {
+        jsi = JavascriptInterface(strForm, data, mode, object : SurveyResponseCallback {
             override fun onSurveyResponseReceived(response: String) {
                 savedResponse = response
                 surveyResponseCallback?.onSurveyResponseReceived(response)
