@@ -20,7 +20,7 @@ class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
             .use { it.readText() }
 
 
-        setForm(template, data, SurveyJSConst.MODE_DISPLAY, this)
+        setForm(template, data, SurveyJSConst.MODE_EDIT, this)
 
     }
 

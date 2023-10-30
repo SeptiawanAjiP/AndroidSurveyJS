@@ -1,9 +1,11 @@
 // const SURVEY_ID = 1;
 
 const surveyJson = JSON.parse(Android.getForm());
+//const theme = Android.getTheme();
 const mode = Android.getMode()
 
 const survey = new Survey.Model(surveyJson);
+//survey.applyTheme(theme);
 setData()
 
 function alertResults (sender) {
