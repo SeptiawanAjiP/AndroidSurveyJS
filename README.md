@@ -40,7 +40,8 @@ class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
             .use { it.readText() }
 
         // Choose the mode: SurveyJSConst.MODE_DISPLAY for display or read-only, SurveyJSConst.MODE_EDIT to enable editing
-        setForm(template, data, SurveyJSConst.MODE_DISPLAY, this)
+        // You can change theme of page view
+        setForm(template, data, SurveyJSConst.MODE_DISPLAY, SurveyJSConst.THEME_LAYERED, this)
 
     }
 
