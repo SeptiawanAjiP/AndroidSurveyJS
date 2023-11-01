@@ -5,7 +5,7 @@ const surveyJson = JSON.parse(Android.getForm());
 const mode = Android.getMode()
 
 const survey = new Survey.Model(surveyJson);
-//survey.applyTheme(theme);
+survey.applyTheme(SurveyTheme.ContrastLight);
 setData()
 
 function alertResults (sender) {
