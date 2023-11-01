@@ -15,6 +15,7 @@ class JavascriptInterface(
     form: String,
     data: String?,
     mode: String,
+    theme: Int?,
     surveyResponseCallback: SurveyResponseCallback
 ) {
     companion object {
@@ -24,6 +25,7 @@ class JavascriptInterface(
     private val mForm = form
     private val mData = data
     private val mMode = mode
+    private val mTheme = theme
     private val mSurveyResponseCallback = surveyResponseCallback
 
     @JavascriptInterface
@@ -41,9 +43,16 @@ class JavascriptInterface(
         return mMode
     }
 
+    @JavascriptInterface
+    fun getTheme(): String {
+        return mTheme.toString()
+    }
+
 
     @JavascriptInterface
     fun getResponse(str: String) {
         mSurveyResponseCallback.onSurveyResponseReceived(str)
     }
+
+
 }
