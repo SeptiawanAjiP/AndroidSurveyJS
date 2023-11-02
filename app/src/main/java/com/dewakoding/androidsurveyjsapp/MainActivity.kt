@@ -24,7 +24,7 @@ class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
 
     }
 
-    override fun onSurveyResponseReceived(response: String) {
+    override fun onSurveyComplete(response: String) {
         Snackbar.make(
             findViewById<View>(android.R.id.content).rootView,
             response,

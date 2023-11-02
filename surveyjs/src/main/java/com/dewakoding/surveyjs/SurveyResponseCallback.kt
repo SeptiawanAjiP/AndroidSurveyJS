@@ -10,5 +10,7 @@ website : dewakoding.com
 
  **/
 interface SurveyResponseCallback {
-    fun onSurveyResponseReceived(response: String)
+    fun onSurveyComplete(response: String)
+
+    fun onSurveyUnComplete(response: String)
 }

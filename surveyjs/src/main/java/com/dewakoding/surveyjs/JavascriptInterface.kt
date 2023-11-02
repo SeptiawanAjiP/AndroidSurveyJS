@@ -51,7 +51,12 @@ class JavascriptInterface(
 
     @JavascriptInterface
     fun getResponse(str: String) {
-        mSurveyResponseCallback.onSurveyResponseReceived(str)
+        mSurveyResponseCallback.onSurveyComplete(str)
+    }
+
+    @JavascriptInterface
+    fun transferData(str: String) {
+        mSurveyResponseCallback.onSurveyComplete(str)
     }
 
 

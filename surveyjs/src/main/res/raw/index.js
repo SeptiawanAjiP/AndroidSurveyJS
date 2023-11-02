@@ -24,6 +24,10 @@ function setData() {
     }
 }
 
+function getDataForm() {
+    Android.transferData(survey.data)
+}
+
 function setTheme() {
     const theme = Android.getTheme()
     switch(theme) {
