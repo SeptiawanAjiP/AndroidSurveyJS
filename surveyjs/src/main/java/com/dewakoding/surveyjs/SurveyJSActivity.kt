@@ -36,7 +36,6 @@ website : dewakoding.com
 
  **/
 open class SurveyJSActivity: AppCompatActivity() {
-
     private val binding by lazy { ActivitySurveyJsBinding.inflate(layoutInflater) }
     internal var jsi: JavascriptInterface? = null
     private var savedResponse: String? = null
@@ -79,9 +78,8 @@ open class SurveyJSActivity: AppCompatActivity() {
                 savedResponse = response
                 surveyResponseCallback?.onSurveyComplete(response)
             }
-
             override fun onSurveyUnComplete(response: String) {
-
+                surveyResponseCallback?.onSurveyUnComplete(response)
             }
         })
         loadContent(jsi)
@@ -290,5 +288,13 @@ open class SurveyJSActivity: AppCompatActivity() {
         } else {
             Toast.makeText(applicationContext, "Failed to Upload Image", Toast.LENGTH_LONG).show()
         }
+    }
+
+    override fun onBackPressed() {
+        onBackPressedDispatcher.onBackPressed()
+        val jsc =
+            "javascript:getDataForm()"
+        binding.webViewComponent?.evaluateJavascript(jsc, null)
+
     }
 }

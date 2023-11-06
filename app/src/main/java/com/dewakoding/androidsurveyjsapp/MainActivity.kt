@@ -31,4 +31,12 @@ class MainActivity : SurveyJSActivity(), SurveyResponseCallback  {
             Snackbar.LENGTH_LONG
         ).show()
     }
+
+    override fun onSurveyUnComplete(response: String) {
+        Snackbar.make(
+            findViewById<View>(android.R.id.content).rootView,
+            response,
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
 }
