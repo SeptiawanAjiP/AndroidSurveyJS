@@ -295,6 +295,5 @@ open class SurveyJSActivity: AppCompatActivity() {
         val jsc =
             "javascript:getDataForm()"
         binding.webViewComponent?.evaluateJavascript(jsc, null)
-
     }
 }
